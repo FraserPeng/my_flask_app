@@ -1,0 +1,7 @@
+import logging
+import logging.config
+
+# config = {"key1": "value1"}
+
+logging.config.fileConfig("./logger.conf")
+logger = logging.getLogger("cse")

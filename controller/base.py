@@ -18,6 +18,8 @@ def basic_authentication():
 def authenticate(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
+        print(func)
+        print(getattr(func, 'authenticated', True))
         if not getattr(func, 'authenticated', True):
             return func(*args, **kwargs)
 

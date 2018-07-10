@@ -1,4 +1,5 @@
 from flask import Flask, got_request_exception
+from flask_sqlalchemy import SQLAlchemy
 from flask_restful import Api
 from controller import client
 
@@ -22,6 +23,11 @@ api.add_resource(client.Clue,
                  '/clue/<int:id>', endpoint='clue')
 api.add_resource(client.Clues, '/clue', endpoint='clues')
 
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:vanke@localhost:9999\
+/flask_db?charset=utf8'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+db = SQLAlchemy(app)
+
 
 def log_exception(sender, exception, **extra):
     """ Log an exception to our logging framework """
@@ -32,5 +38,4 @@ def log_exception(sender, exception, **extra):
 got_request_exception.connect(log_exception, app)
 
 if __name__ == '__main__':
-
     app.run(debug=True)

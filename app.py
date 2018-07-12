@@ -23,7 +23,8 @@ api.add_resource(client.Clue,
                  '/clue/<int:id>', endpoint='clue')
 api.add_resource(client.Clues, '/clue', endpoint='clues')
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:vanke@localhost:9999\
+# python3 必须加pymysql 不然会有问题
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:vanke@localhost:9999\
 /flask_db?charset=utf8'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db = SQLAlchemy(app)

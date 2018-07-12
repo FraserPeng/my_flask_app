@@ -1,4 +1,5 @@
 from app import db
+from datetime import datetime
 
 
 class ClientClueInfo(db.Model):
@@ -34,33 +35,8 @@ class ClientClueInfo(db.Model):
             self.client_name, self.client_phone, self.estate_id, self.rec_time)
 
 
-class EstateInfo(db.Model):
-    __tablename__ = 'estate_info'
-    id = db.Column(db.Integer, primary_key=True)
-    estate_name = db.Column(db.String(50))
-    external_code = db.Column(db.String(50), unique=True)
-    estate_type = db.Column(db.Integer)
-    city_id = db.Column(db.Integer)
-    df = db.Column(db.Boolean)
-    create_by = db.Column(db.String(20))
-    update_by = db.Column(db.String(20))
-    create_date = db.Column(db.DateTime)
-    update_date = db.Column(db.DateTime)
-
-    def __init__(self, name, code, estateType, city):
-        self.estate_name = name
-        self.external_code = code
-        self.estate_type = estateType
-        self.city_id = city
-
-    def __repr__(self):
-        return 'estate_info  %s  %s  %s  %s' % (self.estate_name,
-                                                self.external_code,
-                                                self.estate_type, self.city_id)
-
-
-class EstateCommissionRule(db.Model):
-    __tablename__ = 'estate_commission_rule'
+class CLientEstateCommissionRule(db.Model):
+    __tablename__ = 'client_estate_commission_rule'
     id = db.Column(db.Integer, primary_key=True)
     estate_id = db.Column(db.Integer)
     house_class = db.Column(db.Integer)
@@ -90,8 +66,8 @@ class EstateCommissionRule(db.Model):
             self.name, self.rule_code, self.rule_desc, self.estate_id)
 
 
-class EstateRecRule(db.Model):
-    __tablename__ = 'estate_rec_rule'
+class ClientEstateRecRule(db.Model):
+    __tablename__ = 'client_estate_rec_rule'
     id = db.Column(db.Integer, primary_key=True)
     estate_id = db.Column(db.Integer)
     rule_code = db.Column(db.String(20), unique=True)
@@ -114,3 +90,59 @@ class EstateRecRule(db.Model):
     def __repr__(self):
         return 'estate_rec_rule  %s  %s  %s  %s' % (
             self.desc, self.rule_code, self.rule_desc, self.estate_id)
+
+
+# -------------------------------以下是增删改查--------------------------------------
+def add_clue(model: ClientClueInfo, is_commit=True):
+    '''
+    新增线索
+    '''
+    model.create_by = 'sys'
+    model.create_date = datetime.now()
+    model.df = 0
+    db.session.add(model)
+    if is_commit:
+        db.session.commit()
+
+
+def add_clue_list(data: list, is_commit=True):
+    '''
+    批量新增线索
+    '''
+    for model in data:
+        model.create_by = 'sys'
+        model.create_date = datetime.now()
+        model.df = 0
+        db.session.add(model)
+    if is_commit:
+        db.session.commit()
+
+
+def update_clue_sale_code(sale_code: str, id: int, is_commit=True):
+    '''
+    更新置业顾问
+    '''
+    info = db.session.query(ClientClueInfo).filter_by(id=id).first()
+    info.sale_code = sale_code
+    if is_commit:
+        db.session.commit()
+
+
+def update_clue_expire_time(sale_code: str, id: int, is_commit=True):
+    '''
+    更新置业顾问
+    '''
+    info = db.session.query(ClientClueInfo).filter_by(id=id).first()
+    info.sale_code = sale_code
+    if is_commit:
+        db.session.commit()
+
+
+def update_clue_status(status: int, id: int, is_commit=True):
+    '''
+    更新状态
+    '''
+    info = db.session.query(ClientClueInfo).filter_by(id=id).first()
+    info.status = status
+    if is_commit:
+        db.session.commit()

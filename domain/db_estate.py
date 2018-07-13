@@ -1,4 +1,4 @@
-from app import db
+from domain.db_context import db
 
 
 class EstateInfo(db.Model):
@@ -24,4 +24,3 @@ class EstateInfo(db.Model):
         return 'estate_info  %s  %s  %s  %s' % (self.estate_name,
                                                 self.external_code,
                                                 self.estate_type, self.city_id)
-

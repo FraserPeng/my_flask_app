@@ -1,7 +1,7 @@
-from flask import Flask, got_request_exception
-from flask_sqlalchemy import SQLAlchemy
+from flask import got_request_exception
 from flask_restful import Api
 from controller import client
+from domain.db_context import app
 
 from config import logger
 errors = {
@@ -16,18 +16,10 @@ errors = {
     },
 }
 
-app = Flask(__name__)
 api = Api(app, errors=errors, catch_all_404s=True)
 
-api.add_resource(client.Clue,
-                 '/clue/<int:id>', endpoint='clue')
+api.add_resource(client.Clue, '/clue/<int:id>', endpoint='clue')
 api.add_resource(client.Clues, '/clue', endpoint='clues')
-
-# python3 必须加pymysql 不然会有问题
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:vanke@localhost:9999\
-/flask_db?charset=utf8'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-db = SQLAlchemy(app)
 
 
 def log_exception(sender, exception, **extra):

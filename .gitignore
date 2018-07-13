@@ -3,3 +3,4 @@
 __pycache__
 envn
 log_flask.*
+.vscode

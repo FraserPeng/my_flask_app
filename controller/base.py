@@ -1,11 +1,10 @@
-'''
-title:接口header认证
-date:2018-7-5
-author:fraser
-'''
+
+# title:接口header认证
+# date:2018-7-5
+# author:fraser
 
 from flask_restful import Resource, abort
-from api_param import header_param
+from model.api_param import header_param
 from functools import wraps
 
 
@@ -29,9 +28,10 @@ def authenticate(func):
             return func(*args, **kwargs)
 
         abort(401)
+
     return wrapper
 
 
 class Api_Resource(Resource):
-    method_decorators = [authenticate]
+    # method_decorators = [authenticate]
     super(Resource)

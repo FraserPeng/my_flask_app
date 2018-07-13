@@ -1,4 +1,4 @@
-from app import db
+from domain.db_context import db
 
 
 class AgentInfo(db.Model):

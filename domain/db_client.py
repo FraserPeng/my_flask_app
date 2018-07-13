@@ -1,13 +1,13 @@
-from app import db
+from domain.db_context import db
 from datetime import datetime
 
 
 class ClientClueInfo(db.Model):
     __tablename__ = 'client_clue_info'
     id = db.Column(db.Integer, primary_key=True)
-    client_guid = db.Column(db.String(50), unique=True)
+    client_guid = db.Column(db.String(50))
     client_name = db.Column(db.String(50))
-    client_phone = db.Column(db.String(20), unique=True)
+    client_phone = db.Column(db.String(20))
     gender = db.Column(db.Integer)
     estate_id = db.Column(db.Integer)
     rec_time = db.Column(db.DateTime)
@@ -62,7 +62,7 @@ class CLientEstateCommissionRule(db.Model):
         self.name = name
 
     def __repr__(self):
-        return 'estate_commission_rule  %s  %s  %s  %s' % (
+        return 'client_estate_commission_rule  %s  %s  %s  %s' % (
             self.name, self.rule_code, self.rule_desc, self.estate_id)
 
 
@@ -93,6 +93,9 @@ class ClientEstateRecRule(db.Model):
 
 
 # -------------------------------以下是增删改查--------------------------------------
+
+
+# --------------------线索相关---------------------
 def add_clue(model: ClientClueInfo, is_commit=True):
     '''
     新增线索
@@ -144,5 +147,42 @@ def update_clue_status(status: int, id: int, is_commit=True):
     '''
     info = db.session.query(ClientClueInfo).filter_by(id=id).first()
     info.status = status
+    if is_commit:
+        db.session.commit()
+
+
+def get_clue_by_client_guid(client_guid: str):
+    return db.session.query(ClientClueInfo).filter_by(
+        client_guid=client_guid).first()
+
+
+def get_clue_by_id(clueId: int):
+    return db.session.query(ClientClueInfo).filter_by(id=id).first()
+
+
+# --------------------线索相关--------------------------
+
+
+def add_rec_rule(model: ClientEstateRecRule, is_commit=True):
+    '''
+    新增推荐规则
+    '''
+    model.create_by = 'sys'
+    model.create_date = datetime.now()
+    model.df = 0
+    db.session.add(model)
+    if is_commit:
+        db.session.commit()
+
+
+def add_rec_rule_list(data: list, is_commit=True):
+    '''
+    批量新增推荐规则
+    '''
+    for model in data:
+        model.create_by = 'sys'
+        model.create_date = datetime.now()
+        model.df = 0
+        db.session.add(model)
     if is_commit:
         db.session.commit()
